@@ -20,6 +20,124 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
+model Address {
+    id         Int       @id @default(autoincrement())
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    address    String
+    city       String
+    state      String
+    country    String
+    postalCode String
+    lat        String
+    lang       String
+    Business   Business? @relation(fields: [businessId], references: [id])
+    businessId Int?
+    Customer   Customer? @relation(fields: [customerId], references: [id])
+    customerId Int?
+}
+
+model Business {
+    id        Int               @id @default(autoincrement())
+    name      String
+    logo      String?
+    number    String?
+    settings  BusinessSettings?
+    createdAt DateTime          @default(now())
+    updatedAt DateTime          @updatedAt
+    employees User[]
+    customers Customer[]
+    addresses Address[]
+}
+
+model BusinessSettings {
+    id         Int      @id @default(autoincrement())
+    business   Business @relation(fields: [businessId], references: [id])
+    timeZone   String
+    tax        Float
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    businessId Int      @unique
+}
+
+model Customer {
+    id         Int            @id @default(autoincrement())
+    firstName  String
+    lastName   String
+    email      String
+    phone      String?
+    status     CustomerStatus @default(ACTIVE)
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
+    invoices   Invoice[]
+    estimates  Estimate[]
+    addresses  Address[]
+    Business   Business?      @relation(fields: [businessId], references: [id])
+    businessId Int?
+}
+
+model Invoice {
+    id          Int           @id @default(autoincrement())
+    title       String
+    description String?
+    issueDate   DateTime
+    dueDate     DateTime
+    totalAmount Float
+    status      InvoiceStatus @default(UNPAID)
+    discount    Float?        @default(0)
+    deposit     Float?        @default(0)
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    customer    Customer      @relation(fields: [customerId], references: [id])
+    customerId  Int
+}
+
+model Estimate {
+    id          Int            @id @default(autoincrement())
+    title       String
+    description String?
+    issueDate   DateTime
+    expiryDate  DateTime
+    totalAmount Float
+    status      EstimateStatus @default(DRAFT)
+    discount    Float?         @default(0)
+    deposit     Float?         @default(0)
+    createdAt   DateTime       @default(now())
+    updatedAt   DateTime       @updatedAt
+    customer    Customer       @relation(fields: [customerId], references: [id])
+    customerId  Int
+}
+
+enum InvoiceStatus {
+    UNPAID
+    PARTIALLY_PAID
+    OVERDUE
+    PAID
+    REFUNDED
+    VOIDED
+    SENT
+}
+
+enum EstimateStatus {
+    DRAFT
+    SENT
+    ACCEPTED
+    DECLINED
+    EXPIRED
+    INVOICED
+    CONVERTED_TO_PROJECT
+}
+
+enum CustomerStatus {
+    ACTIVE
+    INACTIVE
+}
+
+enum UserRole {
+    ADMIN
+    EMPLOYEE
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -53,8 +171,11 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    role          UserRole  @default(EMPLOYEE)
     accounts      Account[]
     sessions      Session[]
+    Business      Business? @relation(fields: [businessId], references: [id])
+    businessId    Int?
 }
 
 model VerificationToken {
