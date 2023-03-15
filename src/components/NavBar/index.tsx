@@ -3,6 +3,7 @@ import Image from "next/image";
 
 export const Header = () => {
   const { data: sessionData } = useSession();
+  console.log("🚀 ~ file: index.tsx:6 ~ Header ~ sessionData:", sessionData);
 
   return (
     <div className="navbar bg-base-100">

@@ -1,4 +1,9 @@
+import { api } from "~/utils/api";
+
 const AllCustomersPage = () => {
+  const { data: customers, refetch: refetchCustomers } =
+    api.customer.getAll.useQuery(undefined);
+
   return (
     <div className="my-5 mx-20">
       <div className="mb-14 flex justify-between">
@@ -27,18 +32,22 @@ const AllCustomersPage = () => {
           </thead>
           <tbody>
             {/* row 1 */}
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <td>Cy Ganderton</td>
-              <td>success</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-            </tr>
+            {customers?.map((customer) => (
+              <tr key={customer.id}>
+                <th>
+                  <label>
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                </th>
+                <td>
+                  {customer.firstName} {customer.lastName}
+                </td>
+                <td>{customer.status}</td>
+                <td>Blue</td>
+                <td>{customer.phone}</td>
+                <td>Blue</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
