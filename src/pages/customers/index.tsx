@@ -1,8 +1,21 @@
+import { useState } from "react";
+import { NewCustomerModal } from "~/components/CustomerForms/NewForm";
+import Modal from "~/components/Modal";
 import { api } from "~/utils/api";
 
 const AllCustomersPage = () => {
+  const [open, setOpen] = useState(false);
+  const handleToggle = () => setOpen((prev) => !prev);
+
   const { data: customers, refetch: refetchCustomers } =
     api.customer.getAll.useQuery(undefined);
+  console.log(customers);
+
+  const createCustomer = api.customer.create.useMutation({
+    onSuccess: () => {
+      void refetchCustomers();
+    },
+  });
 
   return (
     <div className="my-5 mx-20">
@@ -10,7 +23,36 @@ const AllCustomersPage = () => {
         <h1 className="text-3xl">Customers</h1>
         <div>
           <div className="btn">Import</div>
-          <div className="btn">Add Customer</div>
+          <div className="btn" onClick={handleToggle}>
+            Add Cusomter
+          </div>
+          <Modal open={open} onClose={handleToggle} disableClickOutside>
+            <NewCustomerModal
+              onSave={({
+                firstName,
+                lastName,
+                email,
+                phone,
+                address,
+                city,
+                state,
+                postalCode,
+              }) => {
+                void createCustomer.mutate({
+                  firstName,
+                  lastName,
+                  email,
+                  phone,
+                  address,
+                  city,
+                  state,
+                  postalCode,
+                });
+              }}
+              onClose={handleToggle}
+            />
+          </Modal>
+          {/* <NewCustomerModal /> */}
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -43,9 +85,12 @@ const AllCustomersPage = () => {
                   {customer.firstName} {customer.lastName}
                 </td>
                 <td>{customer.status}</td>
-                <td>Blue</td>
+                <td>
+                  {customer.address} {customer.city} {customer.state}{" "}
+                  {customer.postalCode}
+                </td>
                 <td>{customer.phone}</td>
-                <td>Blue</td>
+                <td>X Edit</td>
               </tr>
             ))}
           </tbody>

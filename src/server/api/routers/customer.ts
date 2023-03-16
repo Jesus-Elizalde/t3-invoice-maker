@@ -8,9 +8,35 @@ export const customerRouter = createTRPCRouter({
       where: {
         businessId: +ctx.session.user.businessId,
       },
-      include: {
-        addresses: true,
-      },
     });
   }),
+
+  create: protectedProcedure
+    .input(
+      z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        email: z.string(),
+        phone: z.string(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postalCode: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.customer.create({
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          phone: input.phone,
+          businessId: +ctx.session.user.businessId,
+          address: input.address,
+          city: input.city,
+          state: input.state,
+          postalCode: input.postalCode,
+        },
+      });
+    }),
 });

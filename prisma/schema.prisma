@@ -20,44 +20,23 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
-model Address {
-    id         Int       @id @default(autoincrement())
-    createdAt  DateTime  @default(now())
-    updatedAt  DateTime  @updatedAt
+model Business {
+    id         Int        @id @default(autoincrement())
+    name       String
+    logo       String?
+    number     String?
     address    String
     city       String
     state      String
-    country    String
+    country    String?
     postalCode String
-    lat        String
-    lang       String
-    Business   Business? @relation(fields: [businessId], references: [id])
-    businessId Int?
-    Customer   Customer? @relation(fields: [customerId], references: [id])
-    customerId Int?
-}
-
-model Business {
-    id        Int               @id @default(autoincrement())
-    name      String
-    logo      String?
-    number    String?
-    settings  BusinessSettings?
-    createdAt DateTime          @default(now())
-    updatedAt DateTime          @updatedAt
-    employees User[]
-    customers Customer[]
-    addresses Address[]
-}
-
-model BusinessSettings {
-    id         Int      @id @default(autoincrement())
-    business   Business @relation(fields: [businessId], references: [id])
-    timeZone   String
+    lat        String?
+    lang       String?
     tax        Float
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    businessId Int      @unique
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    employees  User[]
+    customers  Customer[]
 }
 
 model Customer {
@@ -67,11 +46,17 @@ model Customer {
     email      String
     phone      String?
     status     CustomerStatus @default(ACTIVE)
+    address    String
+    city       String
+    state      String
+    country    String?
+    postalCode String
+    lat        String?
+    lang       String?
     createdAt  DateTime       @default(now())
     updatedAt  DateTime       @updatedAt
     invoices   Invoice[]
     estimates  Estimate[]
-    addresses  Address[]
     Business   Business?      @relation(fields: [businessId], references: [id])
     businessId Int?
 }
