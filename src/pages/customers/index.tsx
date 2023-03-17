@@ -6,18 +6,30 @@ import { api } from "~/utils/api";
 import { TbTrashFilled } from "react-icons/tb";
 import { TbEdit } from "react-icons/tb";
 import { DeleteCustomerModal } from "~/components/CustomerForms/DeleteForm";
+import { EditCustomerModal } from "~/components/CustomerForms/EditForm";
 
 const AllCustomersPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const handleDeleleToggle = () => setOpenDeleteModal((prev) => !prev);
+  const handleDeleteToggle = () => setOpenDeleteModal((prev) => !prev);
+
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const handleEditToggle = () => setOpenEditModal((prev) => !prev);
 
   const { data: customers, refetch: refetchCustomers } =
     api.customer.getAll.useQuery(undefined);
 
+  console.log(customers);
+
   const createCustomer = api.customer.create.useMutation({
+    onSuccess: () => {
+      void refetchCustomers();
+    },
+  });
+
+  const updateCustomer = api.customer.update.useMutation({
     onSuccess: () => {
       void refetchCustomers();
     },
@@ -113,25 +125,59 @@ const AllCustomersPage = () => {
                 <td>{customer.phone}</td>
                 <td>
                   <div className="flex">
-                    <span
-                      // onClick={() =>
-                      //   void deleteCustomer.mutate({ id: `${customer.id}` })
-                      // }
-                      onClick={handleDeleleToggle}
-                    >
+                    <span onClick={handleDeleteToggle}>
                       <TbTrashFilled />
                     </span>
-                    <span>
+                    <span onClick={handleEditToggle}>
                       <TbEdit />
                     </span>
                   </div>
                 </td>
                 <Modal open={openDeleteModal}>
                   <DeleteCustomerModal
-                    onClose={handleDeleleToggle}
+                    onClose={handleDeleteToggle}
                     onDelete={() =>
                       void deleteCustomer.mutate({ id: `${customer.id}` })
                     }
+                  />
+                </Modal>
+                <Modal open={openEditModal}>
+                  <EditCustomerModal
+                    onSave={({
+                      customerId,
+                      firstName,
+                      lastName,
+                      email,
+                      phone,
+                      address,
+                      city,
+                      state,
+                      postalCode,
+                    }) => {
+                      void updateCustomer.mutate({
+                        customerId,
+                        firstName,
+                        lastName,
+                        email,
+                        phone,
+                        address,
+                        city,
+                        state,
+                        postalCode,
+                      });
+                    }}
+                    onClose={handleEditToggle}
+                    id={customer.id}
+                    customer={{
+                      firstName: customer.firstName,
+                      lastName: customer.lastName,
+                      email: customer.email,
+                      phone: customer.phone,
+                      address: customer.address,
+                      city: customer.city,
+                      state: customer.state,
+                      postalCode: customer.state,
+                    }}
                   />
                 </Modal>
               </tr>

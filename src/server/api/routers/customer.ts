@@ -40,6 +40,36 @@ export const customerRouter = createTRPCRouter({
       });
     }),
 
+  update: protectedProcedure
+    .input(
+      z.object({
+        customerId: z.number(),
+        firstName: z.string(),
+        lastName: z.string(),
+        email: z.string(),
+        phone: z.string().nullable(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postalCode: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.customer.update({
+        where: { id: input.customerId },
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          phone: input.phone,
+          address: input.address,
+          city: input.city,
+          state: input.state,
+          postalCode: input.postalCode,
+        },
+      });
+    }),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
