@@ -120,20 +120,20 @@ const AllCustomersPage = () => {
                       onClick={handleDeleleToggle}
                     >
                       <TbTrashFilled />
-                      <Modal open={openDeleteModal}>
-                        <DeleteCustomerModal
-                          onClose={handleDeleleToggle}
-                          onDelete={() =>
-                            void deleteCustomer.mutate({ id: `${customer.id}` })
-                          }
-                        />
-                      </Modal>
                     </span>
                     <span>
                       <TbEdit />
                     </span>
                   </div>
                 </td>
+                <Modal open={openDeleteModal}>
+                  <DeleteCustomerModal
+                    onClose={handleDeleleToggle}
+                    onDelete={() =>
+                      void deleteCustomer.mutate({ id: `${customer.id}` })
+                    }
+                  />
+                </Modal>
               </tr>
             ))}
           </tbody>
