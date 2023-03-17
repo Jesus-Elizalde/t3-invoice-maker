@@ -142,8 +142,11 @@ export const NewCustomerModal = ({ onSave, onClose }: Props) => {
         </div>
       </div>
       <div className="modal-action">
+        <label className="btn-error btn" onClick={onClose}>
+          Close
+        </label>
         <label className="btn-primary btn" onClick={handleSave}>
-          Yay!
+          Create Customer
         </label>
       </div>
     </>

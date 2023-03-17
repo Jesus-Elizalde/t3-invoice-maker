@@ -1,32 +1,20 @@
 //Modal.tsx
-import React, { useRef } from "react";
+import React from "react";
 import cn from "classnames";
-import { useOnClickOutside } from "usehooks-ts";
 
 type Props = {
   children: React.ReactNode;
   open: boolean;
-  disableClickOutside?: boolean;
-  onClose(): void;
 };
 
-const Modal = ({ children, open, disableClickOutside, onClose }: Props) => {
-  const ref = useRef(null);
-  useOnClickOutside(ref, () => {
-    if (!disableClickOutside) {
-      onClose();
-    }
-  });
-
+const Modal = ({ children, open }: Props) => {
   const modalClass = cn({
     "modal modal-bottom sm:modal-middle": true,
     "modal-open": open,
   });
   return (
     <div className={modalClass}>
-      <div className="modal-box" ref={ref}>
-        {children}
-      </div>
+      <div className="modal-box">{children}</div>
     </div>
   );
 };

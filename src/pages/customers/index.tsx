@@ -3,13 +3,19 @@ import { NewCustomerModal } from "~/components/CustomerForms/NewForm";
 import Modal from "~/components/Modal";
 import { api } from "~/utils/api";
 
+import { TbTrashFilled } from "react-icons/tb";
+import { TbEdit } from "react-icons/tb";
+import { DeleteCustomerModal } from "~/components/CustomerForms/DeleteForm";
+
 const AllCustomersPage = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
+
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const handleDeleleToggle = () => setOpenDeleteModal((prev) => !prev);
 
   const { data: customers, refetch: refetchCustomers } =
     api.customer.getAll.useQuery(undefined);
-  console.log(customers);
 
   const createCustomer = api.customer.create.useMutation({
     onSuccess: () => {
@@ -32,7 +38,10 @@ const AllCustomersPage = () => {
           <div className="btn-primary btn" onClick={handleToggle}>
             + Add Cusomter
           </div>
-          <Modal open={open} onClose={handleToggle} disableClickOutside>
+          <Modal
+            open={open}
+            // onClose={handleToggle}
+          >
             <NewCustomerModal
               onSave={({
                 firstName,
@@ -90,21 +99,40 @@ const AllCustomersPage = () => {
                 <td>
                   {customer.firstName} {customer.lastName}
                 </td>
-                <td>{customer.status}</td>
+                <td>
+                  {customer.status === "ACTIVE" ? (
+                    <span className="badge-success badge">active</span>
+                  ) : (
+                    <span className="badge-error badge">inactive</span>
+                  )}
+                </td>
                 <td>
                   {customer.address} {customer.city} {customer.state}{" "}
                   {customer.postalCode}
                 </td>
                 <td>{customer.phone}</td>
                 <td>
-                  <div
-                    onClick={() =>
-                      void deleteCustomer.mutate({ id: `${customer.id}` })
-                    }
-                  >
-                    X
-                  </div>{" "}
-                  Edit
+                  <div className="flex">
+                    <span
+                      // onClick={() =>
+                      //   void deleteCustomer.mutate({ id: `${customer.id}` })
+                      // }
+                      onClick={handleDeleleToggle}
+                    >
+                      <TbTrashFilled />
+                      <Modal open={openDeleteModal}>
+                        <DeleteCustomerModal
+                          onClose={handleDeleleToggle}
+                          onDelete={() =>
+                            void deleteCustomer.mutate({ id: `${customer.id}` })
+                          }
+                        />
+                      </Modal>
+                    </span>
+                    <span>
+                      <TbEdit />
+                    </span>
+                  </div>
                 </td>
               </tr>
             ))}
