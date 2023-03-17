@@ -3,7 +3,6 @@ import Image from "next/image";
 
 export const Header = () => {
   const { data: sessionData } = useSession();
-  console.log("🚀 ~ file: index.tsx:6 ~ Header ~ sessionData:", sessionData);
 
   return (
     <div className="navbar bg-base-100">
@@ -13,7 +12,7 @@ export const Header = () => {
       <div className="flex-none gap-2">
         {sessionData?.user ? (
           <>
-            <div className="dropdown dropdown-end">
+            <div className="dropdown-end dropdown">
               <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
                 <div className="w-10 rounded-full">
                   <Image

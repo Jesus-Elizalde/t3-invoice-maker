@@ -39,4 +39,14 @@ export const customerRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.customer.delete({
+        where: {
+          id: +input.id,
+        },
+      });
+    }),
 });

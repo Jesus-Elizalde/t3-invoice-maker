@@ -17,14 +17,20 @@ const AllCustomersPage = () => {
     },
   });
 
+  const deleteCustomer = api.customer.delete.useMutation({
+    onSuccess: () => {
+      void refetchCustomers();
+    },
+  });
+
   return (
     <div className="my-5 mx-20">
       <div className="mb-14 flex justify-between">
         <h1 className="text-3xl">Customers</h1>
         <div>
           <div className="btn">Import</div>
-          <div className="btn" onClick={handleToggle}>
-            Add Cusomter
+          <div className="btn-primary btn" onClick={handleToggle}>
+            + Add Cusomter
           </div>
           <Modal open={open} onClose={handleToggle} disableClickOutside>
             <NewCustomerModal
@@ -90,7 +96,16 @@ const AllCustomersPage = () => {
                   {customer.postalCode}
                 </td>
                 <td>{customer.phone}</td>
-                <td>X Edit</td>
+                <td>
+                  <div
+                    onClick={() =>
+                      void deleteCustomer.mutate({ id: `${customer.id}` })
+                    }
+                  >
+                    X
+                  </div>{" "}
+                  Edit
+                </td>
               </tr>
             ))}
           </tbody>
