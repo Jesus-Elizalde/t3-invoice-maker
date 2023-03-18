@@ -1,7 +1,17 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    sessionData?.user ? router.push("/customers") : router.push("/");
+  }, []);
+
   return (
     <>
       <Head>
@@ -10,7 +20,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div></div>
+      <div>Splash Page</div>
     </>
   );
 };

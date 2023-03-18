@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NewCustomerModal } from "~/components/CustomerForms/NewForm";
 import Modal from "~/components/Modal";
 import { api } from "~/utils/api";
@@ -7,8 +7,17 @@ import { TbTrashFilled } from "react-icons/tb";
 import { TbEdit } from "react-icons/tb";
 import { DeleteCustomerModal } from "~/components/CustomerForms/DeleteForm";
 import { EditCustomerModal } from "~/components/CustomerForms/EditForm";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const AllCustomersPage = () => {
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    sessionData?.user ? router.push("/customers") : router.push("/");
+  }, []);
+
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
 

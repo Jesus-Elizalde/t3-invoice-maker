@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 
-import { Header } from "./NavBar";
+import { DrawerNav } from "./NavBar/DrawerNav";
 
 type Props = {
   children: ReactNode;
@@ -9,8 +9,11 @@ type Props = {
 export default function Layout({ children }: Props) {
   return (
     <>
-      <Header />
-      <main>{children}</main>
+      <main>
+        <DrawerNav>
+          {children}
+        </DrawerNav>
+      </main>
     </>
   );
 }
