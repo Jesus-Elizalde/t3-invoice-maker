@@ -16,7 +16,7 @@ const AllCustomersPage = () => {
 
   useEffect(() => {
     sessionData?.user ? void router.push("/customers") : void router.push("/");
-  }, [router, sessionData]);
+  }, []);
 
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
