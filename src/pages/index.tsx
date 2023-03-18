@@ -9,7 +9,9 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void sessionData?.user ? router.push("/customers") : router.push("/");
+    void sessionData?.user
+      ? void router.push("/customers")
+      : void router.push("/");
   }, [router, sessionData]);
 
   return (
