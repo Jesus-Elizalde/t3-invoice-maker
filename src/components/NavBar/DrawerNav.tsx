@@ -95,7 +95,7 @@ export const DrawerNav = ({ children }: Props) => {
               <a className="btn-ghost btn text-xl normal-case">daisyUI</a>
             </div>
             <div className="flex-none gap-2">
-              <div className="btn" onClick={() => signIn()}>
+              <div className="btn" onClick={() => void signIn()}>
                 Sign In
               </div>
             </div>
