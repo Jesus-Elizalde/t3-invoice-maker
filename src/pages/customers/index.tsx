@@ -51,12 +51,12 @@ const AllCustomersPage = () => {
   });
 
   return (
-    <div className="my-5 mx-20">
-      <div className="mb-14 flex justify-between">
+    <div className=" my-1 mx-4 lg:my-5 lg:mx-20">
+      <div className="mb-4 flex justify-between lg:mb-8">
         <h1 className="text-3xl">Customers</h1>
         <div>
-          <div className="btn">Import</div>
-          <div className="btn-primary btn" onClick={handleToggle}>
+          <div className="btn mr-2 hidden lg:inline-flex">Import</div>
+          <div className="btn-primary btn " onClick={handleToggle}>
             + Add Cusomter
           </div>
           <Modal
