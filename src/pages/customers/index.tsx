@@ -9,6 +9,8 @@ import { DeleteCustomerModal } from "~/components/CustomerForms/DeleteForm";
 import { EditCustomerModal } from "~/components/CustomerForms/EditForm";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Table from "~/components/Table";
+import { makeData } from "~/utils/fakeData";
 
 const AllCustomersPage = () => {
   const { data: sessionData } = useSession();
@@ -30,7 +32,8 @@ const AllCustomersPage = () => {
   const { data: customers, refetch: refetchCustomers } =
     api.customer.getAll.useQuery(undefined);
 
-  console.log(customers);
+  const [data] = useState(makeData(25));
+  console.log("🚀 ~ file: index.tsx:36 ~ AllCustomersPage ~ data:", data);
 
   const createCustomer = api.customer.create.useMutation({
     onSuccess: () => {
@@ -92,107 +95,7 @@ const AllCustomersPage = () => {
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="table w-full">
-          {/* head */}
-          <thead>
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Address</th>
-              <th>Number</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* row 1 */}
-            {customers?.map((customer) => (
-              <tr key={customer.id}>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  {customer.firstName} {customer.lastName}
-                </td>
-                <td>
-                  {customer.status === "ACTIVE" ? (
-                    <span className="badge-success badge">active</span>
-                  ) : (
-                    <span className="badge-error badge">inactive</span>
-                  )}
-                </td>
-                <td>
-                  {customer.address} {customer.city} {customer.state}{" "}
-                  {customer.postalCode}
-                </td>
-                <td>{customer.phone}</td>
-                <td>
-                  <div className="flex">
-                    <span onClick={handleDeleteToggle}>
-                      <TbTrashFilled />
-                    </span>
-                    <span onClick={handleEditToggle}>
-                      <TbEdit />
-                    </span>
-                  </div>
-                </td>
-                <Modal open={openDeleteModal}>
-                  <DeleteCustomerModal
-                    onClose={handleDeleteToggle}
-                    onDelete={() =>
-                      void deleteCustomer.mutate({ id: `${customer.id}` })
-                    }
-                  />
-                </Modal>
-                <Modal open={openEditModal}>
-                  <EditCustomerModal
-                    onSave={({
-                      customerId,
-                      firstName,
-                      lastName,
-                      email,
-                      phone,
-                      address,
-                      city,
-                      state,
-                      postalCode,
-                    }) => {
-                      void updateCustomer.mutate({
-                        customerId,
-                        firstName,
-                        lastName,
-                        email,
-                        phone,
-                        address,
-                        city,
-                        state,
-                        postalCode,
-                      });
-                    }}
-                    onClose={handleEditToggle}
-                    id={customer.id}
-                    customer={{
-                      firstName: customer.firstName,
-                      lastName: customer.lastName,
-                      email: customer.email,
-                      phone: customer.phone,
-                      address: customer.address,
-                      city: customer.city,
-                      state: customer.state,
-                      postalCode: customer.state,
-                    }}
-                  />
-                </Modal>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table data={data} rowsPerPage={10} />
       </div>
     </div>
   );
