@@ -6,7 +6,7 @@ export const customerRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.customer.findMany({
       where: {
-        businessId: +ctx.session.user.businessId,
+        businessId: ctx.session.user.businessId,
       },
     });
   }),
@@ -31,7 +31,7 @@ export const customerRouter = createTRPCRouter({
           lastName: input.lastName,
           email: input.email,
           phone: input.phone,
-          businessId: +ctx.session.user.businessId,
+          businessId: ctx.session.user.businessId,
           address: input.address,
           city: input.city,
           state: input.state,
@@ -43,7 +43,7 @@ export const customerRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       z.object({
-        customerId: z.number(),
+        customerId: z.string(),
         firstName: z.string(),
         lastName: z.string(),
         email: z.string(),
@@ -75,7 +75,7 @@ export const customerRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.customer.delete({
         where: {
-          id: +input.id,
+          id: input.id,
         },
       });
     }),

@@ -1,21 +1,11 @@
 import { faker } from "@faker-js/faker";
+import { RouterOutputs } from "./api";
 
-export type Person = {
-  id: String;
-  firstName: String;
-  lastName: String;
-  email: String;
-  phone: String;
-  status: "ACTIVE" | "INACTIVE";
-  address: String;
-  city: String;
-  state: String;
-  country: String;
-  postalCode: String;
-  lat: String;
-  lang: String;
+type Customer = RouterOutputs["customer"]["getAll"][0];
+
+interface Person extends Customer {
   subRows?: Person[];
-};
+}
 
 const range = (len: number) => {
   const arr = [];
@@ -40,6 +30,9 @@ const newPerson = (): Person => {
     postalCode: faker.address.zipCode(),
     lat: faker.address.latitude(),
     lang: faker.address.longitude(),
+    createdAt: faker.date.future(),
+    updatedAt: faker.date.future(),
+    businessId: faker.datatype.uuid(),
   };
 };
 

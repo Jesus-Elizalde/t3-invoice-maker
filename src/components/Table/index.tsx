@@ -1,34 +1,49 @@
 import React, { useState } from "react";
+import { RouterOutputs } from "~/utils/api";
 
 import useTable from "../../hooks/useTable";
 import styles from "../../styles/Table.module.css";
 import TableFooter from "./TableFooter";
 
-const Table = ({ data, rowsPerPage }: { data: []; rowsPerPage: number }) => {
+type Customer = RouterOutputs["customer"]["getAll"][0];
+
+const Table = ({
+  data,
+  rowsPerPage,
+}: {
+  data: Customer[] | undefined;
+  rowsPerPage: number;
+}) => {
   const [page, setPage] = useState(1);
   const { slice, range } = useTable(data, page, rowsPerPage);
   return (
     <>
-      <table className={styles.table}>
-        <thead className={styles.tableRowHeader}>
+      <table className="table-compact table w-full">
+        <thead>
           <tr>
-            <th className={styles.tableHeader}>First Name</th>
-            <th className={styles.tableHeader}>Last Name</th>
-            <th className={styles.tableHeader}>Email</th>
-            <th className={styles.tableHeader}>Phone</th>
-            <th className={styles.tableHeader}>Status</th>
-            <th className={styles.tableHeader}></th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Status</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {slice.map((el) => (
-            <tr className={styles.tableRowItems} key={el.id}>
-              <td className={styles.tableCell}>{el.firstName}</td>
-              <td className={styles.tableCell}>{el.lastName}</td>
-              <td className={styles.tableCell}>{el.email}</td>
-              <td className={styles.tableCell}>{el.phone}</td>
-              <td className={styles.tableCell}>{el.status}</td>
-              <td className={styles.tableCell}>X Edit</td>
+            <tr key={el.id}>
+              <td>{el.firstName}</td>
+              <td>{el.lastName}</td>
+              <td>
+                {el.status === "ACTIVE" ? (
+                  <span className="badge-success badge w-20">active</span>
+                ) : (
+                  <span className="badge-error badge w-20">inactive</span>
+                )}
+              </td>
+              <td>{el.phone}</td>
+              <td>{el.email}</td>
+              <td>X Edit</td>
             </tr>
           ))}
         </tbody>
