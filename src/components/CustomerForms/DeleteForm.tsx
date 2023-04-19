@@ -1,13 +1,14 @@
 import React from "react";
 
 type Props = {
-  onDelete: () => void;
+  onDelete: (customer: { id: string }) => void;
   onClose(): void;
+  id: string;
 };
 
-export const DeleteCustomerModal = ({ onDelete, onClose }: Props) => {
+export const DeleteCustomerModal = ({ onDelete, onClose, id }: Props) => {
   const handleDelete = () => {
-    onDelete();
+    onDelete({ id });
     onClose();
   };
   return (
@@ -21,6 +22,7 @@ export const DeleteCustomerModal = ({ onDelete, onClose }: Props) => {
         <label className="btn-primary btn" onClick={handleDelete}>
           Delete Customer
         </label>
+        <span>{id}</span>
       </div>
     </>
   );

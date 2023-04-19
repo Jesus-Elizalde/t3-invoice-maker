@@ -23,31 +23,12 @@ const AllCustomersPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const handleToggle = () => setOpen((prev) => !prev);
 
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const handleDeleteToggle = () => setOpenDeleteModal((prev) => !prev);
-
-  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
-  const handleEditToggle = () => setOpenEditModal((prev) => !prev);
-
   const { data: customers, refetch: refetchCustomers } =
     api.customer.getAll.useQuery(undefined);
 
-  const [data] = useState(makeData(25));
-  console.log("🚀 ~ file: index.tsx:36 ~ AllCustomersPage ~ data:", data);
+  // const [data] = useState(makeData(250));
 
   const createCustomer = api.customer.create.useMutation({
-    onSuccess: () => {
-      void refetchCustomers();
-    },
-  });
-
-  const updateCustomer = api.customer.update.useMutation({
-    onSuccess: () => {
-      void refetchCustomers();
-    },
-  });
-
-  const deleteCustomer = api.customer.delete.useMutation({
     onSuccess: () => {
       void refetchCustomers();
     },
@@ -95,7 +76,11 @@ const AllCustomersPage = () => {
         </div>
       </div>
       <div className="overflow-x-auto">
-        <Table data={data} rowsPerPage={10} />
+        <Table
+          data={customers}
+          rowsPerPage={10}
+          updateCustomers={refetchCustomers}
+        />
       </div>
     </div>
   );
